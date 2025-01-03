@@ -10,7 +10,7 @@ function UserProtectedWrapper() {
 
   React.useEffect(() => {
     if (!token) {
-      navigate("/login");
+      return navigate("/login");
     }
     const fetchUser = async () => {
       await getUser(token)

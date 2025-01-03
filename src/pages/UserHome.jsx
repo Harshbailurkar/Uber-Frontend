@@ -1,24 +1,37 @@
 import React, { useState, useRef } from "react";
 import UberLogo from "../assets/Uber-Logo.png";
 import { useSelector } from "react-redux";
-import { useActionState, useOptimistic } from "react";
-import { useFormStatus } from "react-dom";
-import { useFormAction } from "react-router-dom";
+import { useFormAction, useNavigate } from "react-router-dom";
 import { useGSAP } from "@gsap/react";
 import gsap from "gsap";
-import { RiArrowDownWideLine } from "react-icons/ri";
 import { SlArrowDown, SlArrowUp } from "react-icons/sl";
 import LocationSearchPanel from "../components/LocationSearchPanel";
+import SelectedVehicleDetails from "../components/SelectedVehicleDetails";
+import VehiclePanel from "../components/VehiclePanel";
+import WaitingForDriver from "../components/WaitingForDriver";
+import LookingForDriver from "../components/LookingForDriver";
 
 function UserHome() {
   const user = useSelector((state) => state.user);
   const [visible, setVisible] = useState(false);
+  const [vehiclePanel, setVehiclePanel] = useState(false);
+  const [selectedVehicleDetailsPanel, setSelectedVehicleDetailsPanel] =
+    useState(false);
+  const [vehicleFound, setVehicleFound] = useState(false);
+  const [waitingForDriver, setWaitingForDriver] = useState(false);
+
   const [state, actionFunction, isPending] = useFormAction(formAction, {
     pickupLocation: "",
     destination: "",
   });
+  const navigate = useNavigate();
 
   const PannelRef = useRef(null);
+  const vehiclePanelRef = useRef(null);
+  const selectedVehicleDetailsRef = useRef(null);
+  const vehicleFoundRef = useRef(null);
+  const waitingForDriverRef = useRef(null);
+
   useGSAP(() => {
     if (visible) {
       gsap.to(PannelRef.current, {
@@ -35,6 +48,32 @@ function UserHome() {
     }
   }, [visible]);
 
+  useGSAP(() => {
+    gsap.to(vehiclePanelRef.current, {
+      transform: vehiclePanel ? "translateY(0)" : "translateY(100%)",
+    });
+  }, [vehiclePanel]);
+
+  useGSAP(() => {
+    gsap.to(selectedVehicleDetailsRef.current, {
+      transform: selectedVehicleDetailsPanel
+        ? "translateY(0)"
+        : "translateY(100%)",
+    });
+  }, [selectedVehicleDetailsPanel]);
+
+  useGSAP(() => {
+    gsap.to(vehicleFoundRef.current, {
+      transform: vehicleFound ? "translateY(0)" : "translateY(100%)",
+    });
+  }, [vehicleFound]);
+
+  useGSAP(() => {
+    gsap.to(waitingForDriverRef.current, {
+      transform: waitingForDriver ? "translateY(0)" : "translateY(100%)",
+    });
+  }, [waitingForDriver]);
+
   async function formAction(prevState, FormData) {
     const data = {
       pickupLocation: FormData.get("pickupLocation"),
@@ -44,13 +83,22 @@ function UserHome() {
     return data;
   }
 
+  function visitUserProfile() {
+    navigate("/user-profile");
+  }
+
   return (
-    <div className="h-screen w-screen flex flex-col relative">
+    <div className="h-screen w-screen flex flex-col relative overflow-hidden">
       <div className="flex flex-row items-center justify-end">
         <img src={UberLogo} alt="" className="w-16 absolute left-5 top-5" />
-        <div className="absolute  right-5 top-5 font-bold bg-[#004D40] text-white w-10 h-10 flex items-center justify-center rounded-full">
-          {user.fullName.firstName[0].toUpperCase()}
-        </div>
+        {!visible && (
+          <div
+            className="absolute  right-5 top-5 font-bold bg-[#004D40] text-white w-10 h-10 flex items-center justify-center rounded-full z-10"
+            onClick={visitUserProfile}
+          >
+            {user?.fullName?.firstName[0]?.toUpperCase() || "U"}
+          </div>
+        )}
       </div>
       <div className="h-screen w-screen">
         {/* image for temporary use */}
@@ -60,7 +108,7 @@ function UserHome() {
           className="h-full w-full object-cover"
         />
       </div>
-      <div className=" absolute flex flex-col h-screen justify-end top-0 w-full">
+      <div className=" absolute flex flex-col h-screen justify-end top-0 w-full ">
         <div className="h-[30%]  bg-white p-5 relative rounded-t-2xl">
           <div className="flex justify-between">
             <h4 className="text-2xl font-semibold">Find Trip</h4>
@@ -91,9 +139,35 @@ function UserHome() {
             />
           </form>
         </div>
-        <div ref={PannelRef} className={`h-[70%] bg-white `}>
-          <LocationSearchPanel />
+        <div ref={PannelRef} className={` bg-white `}>
+          <LocationSearchPanel
+            vehiclePanel={vehiclePanel}
+            setVehiclePanel={setVehiclePanel}
+          />
         </div>
+      </div>
+      <VehiclePanel
+        vehiclepanelref={vehiclePanelRef}
+        setvehiclepanel={setVehiclePanel}
+        setselectedvehicledetailspanel={setSelectedVehicleDetailsPanel}
+      />
+
+      <SelectedVehicleDetails
+        selectedVehicleDetailsRef={selectedVehicleDetailsRef}
+        vehicleDetailsPanel={selectedVehicleDetailsPanel}
+        setSelectedVehicleDetailsPanel={setSelectedVehicleDetailsPanel}
+        setvehiclefound={setVehicleFound}
+        vehiclefound={vehicleFound}
+      />
+      <LookingForDriver
+        vehiclefoundref={vehicleFoundRef}
+        setvehiclefound={setVehicleFound}
+      />
+      <div>
+        <WaitingForDriver
+          waitingfordriverref={waitingForDriverRef}
+          waitingfordriver={waitingForDriver}
+        />
       </div>
     </div>
   );

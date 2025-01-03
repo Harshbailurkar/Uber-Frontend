@@ -8,6 +8,7 @@ import Captainlogin from "./pages/Captainlogin";
 import UserHome from "./pages/UserHome";
 import CaptainHome from "./pages/CaptainHome";
 import UserProtectedWrapper from "./pages/UserProtectedWrapper";
+import UserProfile from "./pages/UserProfile";
 function App() {
   return (
     <div>
@@ -20,6 +21,7 @@ function App() {
         <Route element={<UserProtectedWrapper />}>
           <Route path="/user-home" element={<UserHome />} />
           <Route path="/captain-home" element={<CaptainHome />} />
+          <Route path="/user-profile" element={<UserProfile />} />
         </Route>
         <Route path="*" element={<h1>Not Found</h1>} />
       </Routes>

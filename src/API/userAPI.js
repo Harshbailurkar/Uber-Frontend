@@ -31,9 +31,17 @@ export const loginUser = async (loginData) => {
     throw error.response ? error.response.data : new Error("Login failed");
   }
 };
-export const logoutUser = async () => {
+export const logoutUser = async (token) => {
   try {
-    const response = await axiosInstance.post("/users/logout");
+    const response = await axiosInstance.post(
+      "/users/logout",
+      {},
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      }
+    );
     return response.data;
   } catch (error) {
     if (error.response.status == 500) {
