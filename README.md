@@ -16,7 +16,7 @@ Make sure you have the following installed on your machine:
 1. Clone the repository:
 
    ```sh
-   git clone https://github.com/your-username/uber-clone.git
+   git clone https://github.com/Harshbailurkar/Uber-Frontend.git
    ```
 
 2. Navigate to the frontend directory:
