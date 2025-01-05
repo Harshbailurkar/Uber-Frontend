@@ -21,10 +21,11 @@ function CaptainLogin() {
     };
     await loginCaptain(data)
       .then((res) => {
-        localStorage.setItem("token", res.data.accessToken);
+        localStorage.setItem("ctoken", res.data.accessToken);
         Navigate("/captain-home");
       })
       .catch((error) => {
+        localStorage.removeItem("ctoken");
         state.error = error.message;
       });
     return data;

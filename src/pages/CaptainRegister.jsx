@@ -50,10 +50,11 @@ function CaptainRegister() {
               capacity: data.vehicalCapacity,
               vehicleType: data.vechicalType,
             },
+            status: res.data.status,
           })
         );
 
-        localStorage.setItem("token", res.data.accessToken);
+        localStorage.setItem("ctoken", res.data.accessToken);
         navigate("/captain-home");
       })
       .catch((error) => {

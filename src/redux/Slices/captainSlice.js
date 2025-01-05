@@ -12,6 +12,7 @@ const initialState = {
     capacity: "",
     vehicleType: "",
   },
+  status: "",
 };
 
 const captainSlice = createSlice({
@@ -26,6 +27,7 @@ const captainSlice = createSlice({
       state.vehical.plate = action.payload.vehical.plate;
       state.vehical.capacity = action.payload.vehical.capacity;
       state.vehical.vehicleType = action.payload.vehical.vehicleType;
+      state.status = action.payload.status;
     },
     clearCaptain(state) {
       state.email = "";
@@ -35,6 +37,7 @@ const captainSlice = createSlice({
       state.vehical.plate = "";
       state.vehical.capacity = "";
       state.vehical.vehicleType = "";
+      state.status = "";
     },
   },
 });

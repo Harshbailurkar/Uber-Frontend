@@ -9,6 +9,10 @@ import UserHome from "./pages/UserHome";
 import CaptainHome from "./pages/CaptainHome";
 import UserProtectedWrapper from "./pages/UserProtectedWrapper";
 import UserProfile from "./pages/UserProfile";
+import Riding from "./pages/Riding";
+import CaptainProtectedWrapper from "./pages/CaptainProtectedWrapper";
+import CaptainProfile from "./pages/CaptainProfile";
+import CaptainRiding from "./pages/CaptainRiding";
 function App() {
   return (
     <div>
@@ -20,8 +24,13 @@ function App() {
         <Route path="/captain-login" element={<Captainlogin />} />
         <Route element={<UserProtectedWrapper />}>
           <Route path="/user-home" element={<UserHome />} />
-          <Route path="/captain-home" element={<CaptainHome />} />
           <Route path="/user-profile" element={<UserProfile />} />
+          <Route path="/riding" element={<Riding />} />
+        </Route>
+        <Route element={<CaptainProtectedWrapper />}>
+          <Route path="/captain-home" element={<CaptainHome />} />
+          <Route path="/captain-profile" element={<CaptainProfile />} />
+          <Route path="/captain-riding" element={<CaptainRiding />} />
         </Route>
         <Route path="*" element={<h1>Not Found</h1>} />
       </Routes>

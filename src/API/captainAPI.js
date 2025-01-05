@@ -43,3 +43,25 @@ export const logoutCaptain = async () => {
     throw error.response ? error.response.data : new Error("failed to logout");
   }
 };
+
+export const getCaptain = async (token) => {
+  try {
+    const response = await axiosInstance.post(
+      "/captain/profile",
+      {},
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      }
+    );
+    return response.data;
+  } catch (error) {
+    if (error.response.status === 401) {
+      throw new Error("Unauthorized");
+    }
+    throw error.response
+      ? error.response.data
+      : new Error("Failed to get user");
+  }
+};
