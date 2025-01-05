@@ -10,6 +10,7 @@ import SelectedVehicleDetails from "../components/SelectedVehicleDetails";
 import VehiclePanel from "../components/VehiclePanel";
 import WaitingForDriver from "../components/WaitingForDriver";
 import LookingForDriver from "../components/LookingForDriver";
+import { getSuggestions } from "../API/maps";
 
 function UserHome() {
   const user = useSelector((state) => state.user);
@@ -19,6 +20,9 @@ function UserHome() {
     useState(false);
   const [vehicleFound, setVehicleFound] = useState(false);
   const [waitingForDriver, setWaitingForDriver] = useState(false);
+  const [suggestions, setSuggestions] = useState([]);
+  const [pickupLocation, setPickupLocation] = useState("");
+  const [destination, setDestination] = useState("");
 
   const [state, actionFunction, isPending] = useFormAction(formAction, {
     pickupLocation: "",
@@ -31,6 +35,8 @@ function UserHome() {
   const selectedVehicleDetailsRef = useRef(null);
   const vehicleFoundRef = useRef(null);
   const waitingForDriverRef = useRef(null);
+
+  const token = localStorage.getItem("token");
 
   useGSAP(() => {
     if (visible) {
@@ -83,6 +89,30 @@ function UserHome() {
     return data;
   }
 
+  async function handleInputChange(event) {
+    const { name, value } = event.target;
+    if (name === "pickupLocation") {
+      setPickupLocation(value);
+    } else if (name === "destination") {
+      setDestination(value);
+    }
+    try {
+      const response = await getSuggestions({ address: value }, token);
+      setSuggestions(response);
+    } catch (error) {
+      console.error("Error fetching suggestions:", error.message);
+    }
+  }
+
+  function handleSuggestionClick(suggestion, inputType) {
+    if (inputType === "pickupLocation") {
+      setPickupLocation(suggestion.description);
+    } else if (inputType === "destination") {
+      setDestination(suggestion.description);
+      setVehiclePanel(true); // Open vehicle panel only when destination is added
+    }
+  }
+
   function visitUserProfile() {
     navigate("/user-profile");
   }
@@ -129,6 +159,8 @@ function UserHome() {
               placeholder="Add a pickup location"
               className="bg-[#eee] px-12 py-2 rounded-lg w-full mt-5"
               onClick={() => setVisible(true)}
+              onChange={handleInputChange}
+              value={pickupLocation}
             />
             <input
               type="text"
@@ -136,6 +168,8 @@ function UserHome() {
               placeholder="Enter your destination"
               className="bg-[#eee] px-12 py-2 rounded-lg w-full mt-3"
               onClick={() => setVisible(true)}
+              onChange={handleInputChange}
+              value={destination}
             />
           </form>
         </div>
@@ -143,6 +177,9 @@ function UserHome() {
           <LocationSearchPanel
             vehiclePanel={vehiclePanel}
             setVehiclePanel={setVehiclePanel}
+            suggestions={suggestions}
+            onSuggestionClick={handleSuggestionClick}
+            inputType={destination ? "destination" : "pickupLocation"}
           />
         </div>
       </div>
