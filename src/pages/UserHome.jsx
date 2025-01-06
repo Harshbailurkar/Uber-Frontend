@@ -236,6 +236,10 @@ function UserHome() {
       <LookingForDriver
         vehiclefoundref={vehicleFoundRef}
         setvehiclefound={setVehicleFound}
+        vehicleType={vehicleType}
+        pickupLocation={pickupLocation}
+        destination={destination}
+        fareData={totalAmount}
       />
       <div>
         <WaitingForDriver

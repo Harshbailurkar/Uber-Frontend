@@ -18,6 +18,12 @@ function SelectedVehicleDetails({
   destination,
   vehicleType,
 }) {
+  const vehicleImages = {
+    auto: "https://clipart-library.com/2023/Uber_Auto_312x208_pixels_Mobile.png",
+    bike: "https://www.uber-assets.com/image/upload/f_auto,q_auto:eco,c_fill,w_956,h_637/v1649231091/assets/2c/7fa194-c954-49b2-9c6d-a3b8601370f5/original/Uber_Moto_Orange_312x208_pixels_Mobile.png",
+    car: car,
+  };
+  const vehicleImg = vehicleImages[vehicleType] || "";
   return (
     <div
       ref={selectedVehicleDetailsRef}
@@ -35,46 +41,50 @@ function SelectedVehicleDetails({
           </span>
         </div>
       )}
-      <div className="flex flex-col items-center gap-2 justify-center">
-        <img src={car} alt="" className="h-24" />
-        <div className="w-full flex flex-col  gap-3">
-          <div className="flex flex-row items-center border-b-2 pb-2">
-            <IoLocation />
+      {pickupLocation && destination && vehicleType && fareData && (
+        <div className="flex flex-col items-center gap-2 justify-center">
+          <img src={vehicleImg} alt="" className="h-24" />
+          <div className="w-full flex flex-col  gap-3">
+            <div className="flex flex-row items-center border-b-2 pb-2">
+              <IoLocation />
 
-            <div>
-              <h3 className="text-lg font-medium ml-5">151 A</h3>
-              <p className="text-md -mt-1 text-gray-600 ml-5">
-                {pickupLocation}
-              </p>
+              <div>
+                <h3 className="text-lg font-medium ml-5">151 A</h3>
+                <p className="text-md -mt-1 text-gray-600 ml-5">
+                  {pickupLocation}
+                </p>
+              </div>
+            </div>
+            <div className="flex flex-row items-center border-b-2 pb-2">
+              <MdOutlineMyLocation />
+              <div>
+                <h3 className="text-lg font-medium ml-5">192 A wing</h3>
+                <p className="text-md -mt-1 text-gray-600 ml-5">
+                  {destination}
+                </p>
+              </div>
+            </div>
+            <div className="flex flex-row items-center ">
+              <BsCash />
+              <div>
+                <p className="text-lg ml-5 text-gray-600">Cash</p>
+                <h3 className="text-2xl ml-5 font-medium">
+                  ₹ {fareData[vehicleType]}
+                </h3>
+              </div>
             </div>
           </div>
-          <div className="flex flex-row items-center border-b-2 pb-2">
-            <MdOutlineMyLocation />
-            <div>
-              <h3 className="text-lg font-medium ml-5">192 A wing</h3>
-              <p className="text-md -mt-1 text-gray-600 ml-5">{destination}</p>
-            </div>
-          </div>
-          <div className="flex flex-row items-center ">
-            <BsCash />
-            <div>
-              <p className="text-lg ml-5 text-gray-600">Cash</p>
-              <h3 className="text-2xl ml-5 font-medium">
-                ₹ {fareData[vehicleType]}
-              </h3>
-            </div>
-          </div>
+          <button
+            className=" mt-5 w-full p-2 text-white text-lg bg-green-600 font-semibold rounded-lg"
+            onClick={() => {
+              setvehiclefound(true);
+              createRide();
+            }}
+          >
+            Confirm
+          </button>
         </div>
-        <button
-          className=" mt-5 w-full p-2 text-white text-lg bg-green-600 font-semibold rounded-lg"
-          onClick={() => {
-            setvehiclefound(true);
-            createRide();
-          }}
-        >
-          Confirm
-        </button>
-      </div>
+      )}
     </div>
   );
 }
