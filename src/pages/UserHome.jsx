@@ -11,6 +11,7 @@ import VehiclePanel from "../components/VehiclePanel";
 import WaitingForDriver from "../components/WaitingForDriver";
 import LookingForDriver from "../components/LookingForDriver";
 import { getSuggestions } from "../API/maps";
+import { createRide } from "../API/rideAPI";
 
 function UserHome() {
   const user = useSelector((state) => state.user);
@@ -23,6 +24,8 @@ function UserHome() {
   const [suggestions, setSuggestions] = useState([]);
   const [pickupLocation, setPickupLocation] = useState("");
   const [destination, setDestination] = useState("");
+  const [vehicleType, setVehicleType] = useState(null);
+  const [totalAmount, setTotalAmount] = useState(null);
 
   const [state, actionFunction, isPending] = useFormAction(formAction, {
     pickupLocation: "",
@@ -104,6 +107,20 @@ function UserHome() {
     }
   }
 
+  async function createRideFn() {
+    const data = {
+      pickup: pickupLocation,
+      destination: destination,
+      vehicleType: vehicleType,
+    };
+    try {
+      const response = await createRide(data, token);
+      console.log(response);
+    } catch (error) {
+      console.error("Error creating ride:", error.message);
+    }
+  }
+
   function handleSuggestionClick(suggestion, inputType) {
     if (inputType === "pickupLocation") {
       setPickupLocation(suggestion.description);
@@ -172,6 +189,16 @@ function UserHome() {
               value={destination}
             />
           </form>
+          {visible && (
+            <button
+              className="bg-black w-full text-lg font-medium mt-3 text-white rounded-lg p-2"
+              onClick={() => {
+                if (pickupLocation && destination) setVehiclePanel(true);
+              }}
+            >
+              Find Trip
+            </button>
+          )}
         </div>
         <div ref={PannelRef} className={` bg-white `}>
           <LocationSearchPanel
@@ -187,6 +214,11 @@ function UserHome() {
         vehiclepanelref={vehiclePanelRef}
         setvehiclepanel={setVehiclePanel}
         setselectedvehicledetailspanel={setSelectedVehicleDetailsPanel}
+        pickuplocation={pickupLocation}
+        vehiclepanel={vehiclePanel}
+        Destination={destination}
+        selectVehicleType={setVehicleType}
+        setfaredata={setTotalAmount}
       />
 
       <SelectedVehicleDetails
@@ -195,6 +227,11 @@ function UserHome() {
         setSelectedVehicleDetailsPanel={setSelectedVehicleDetailsPanel}
         setvehiclefound={setVehicleFound}
         vehiclefound={vehicleFound}
+        createRide={createRideFn}
+        pickupLocation={pickupLocation}
+        destination={destination}
+        fareData={totalAmount}
+        vehicleType={vehicleType}
       />
       <LookingForDriver
         vehiclefoundref={vehicleFoundRef}

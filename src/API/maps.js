@@ -3,9 +3,9 @@ import axiosInstance from "./axiosConfig";
 export const getSuggestions = async (data, token) => {
   try {
     const response = await axiosInstance.get("/maps/get-suggestions", {
-      params: data, // Query parameters
+      params: data,
       headers: {
-        Authorization: `Bearer ${token}`, // Authorization header with token
+        Authorization: `Bearer ${token}`,
       },
     });
     return response.data;

@@ -12,6 +12,11 @@ function SelectedVehicleDetails({
   setSelectedVehicleDetailsPanel,
   setvehiclefound,
   vehiclefound,
+  createRide,
+  fareData,
+  pickupLocation,
+  destination,
+  vehicleType,
 }) {
   return (
     <div
@@ -39,7 +44,7 @@ function SelectedVehicleDetails({
             <div>
               <h3 className="text-lg font-medium ml-5">151 A</h3>
               <p className="text-md -mt-1 text-gray-600 ml-5">
-                Vyankatesh Galli Ajara, 416505
+                {pickupLocation}
               </p>
             </div>
           </div>
@@ -47,16 +52,16 @@ function SelectedVehicleDetails({
             <MdOutlineMyLocation />
             <div>
               <h3 className="text-lg font-medium ml-5">192 A wing</h3>
-              <p className="text-md -mt-1 text-gray-600 ml-5">
-                Viraj PG, Viman nagar, pune. 416505
-              </p>
+              <p className="text-md -mt-1 text-gray-600 ml-5">{destination}</p>
             </div>
           </div>
           <div className="flex flex-row items-center ">
             <BsCash />
             <div>
               <p className="text-lg ml-5 text-gray-600">Cash</p>
-              <h3 className="text-2xl ml-5 font-medium">₹ 109.20</h3>
+              <h3 className="text-2xl ml-5 font-medium">
+                ₹ {fareData[vehicleType]}
+              </h3>
             </div>
           </div>
         </div>
@@ -64,6 +69,7 @@ function SelectedVehicleDetails({
           className=" mt-5 w-full p-2 text-white text-lg bg-green-600 font-semibold rounded-lg"
           onClick={() => {
             setvehiclefound(true);
+            createRide();
           }}
         >
           Confirm

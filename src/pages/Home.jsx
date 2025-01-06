@@ -6,8 +6,11 @@ import { useNavigate } from "react-router-dom";
 function Home() {
   const navigate = useNavigate();
   function handleRedirect() {
-    localStorage.getItem("token") ? navigate("/user-home") : navigate("/login");
+    localStorage.getItem("token") ? navigate("/user-home") : null;
   }
+  React.useEffect(() => {
+    handleRedirect();
+  }, []);
   return (
     <div>
       <div
@@ -20,7 +23,7 @@ function Home() {
 
           <button
             className="w-full bg-black text-white py-3 rounded mt-4"
-            onClick={handleRedirect}
+            onClick={() => navigate("/login")}
           >
             Continue
           </button>
