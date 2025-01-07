@@ -36,7 +36,7 @@ const LookingForDriver = ({
         <div className="bg-blue-600 h-1 w-1/2 absolute animate-move"></div>
       </div>
       <div className="flex flex-col items-center gap-2 justify-center">
-        <img src={vehicleImg} alt="" className="h-24" />
+        <img src={vehicleImg || null} alt="" className="h-24" />
         <div className="w-full flex flex-col  gap-3">
           <div className="flex flex-row items-center border-b-2 pb-2">
             <IoLocation />
@@ -44,7 +44,7 @@ const LookingForDriver = ({
             <div>
               <h3 className="text-lg font-medium ml-5">151 A</h3>
               <p className="text-md -mt-1 text-gray-600 ml-5">
-                {pickupLocation}
+                {pickupLocation || "NA"}
               </p>
             </div>
           </div>
@@ -52,7 +52,9 @@ const LookingForDriver = ({
             <MdOutlineMyLocation />
             <div>
               <h3 className="text-lg font-medium ml-5">192 A wing</h3>
-              <p className="text-md -mt-1 text-gray-600 ml-5">{destination}</p>
+              <p className="text-md -mt-1 text-gray-600 ml-5">
+                {destination || "NA"}
+              </p>
             </div>
           </div>
           <div className="flex flex-row items-center ">
@@ -60,7 +62,10 @@ const LookingForDriver = ({
             <div>
               <p className="text-lg ml-5 text-gray-600">Cash</p>
               <h3 className="text-2xl ml-5 font-medium">
-                ₹ {fareData[vehicleType]}
+                ₹{" "}
+                {fareData && fareData[vehicleType]
+                  ? fareData[vehicleType]
+                  : "N/A"}
               </h3>
             </div>
           </div>
