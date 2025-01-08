@@ -5,6 +5,7 @@ import { FaChevronUp } from "react-icons/fa6";
 import { useEffect } from "react";
 import gsap from "gsap";
 import FinishRide from "../components/FinishRide";
+import LiveTracking from "../components/LiveTracking";
 
 function CaptainRiding() {
   const location = useLocation();
@@ -36,12 +37,8 @@ function CaptainRiding() {
       </div>
 
       {/* Map Section */}
-      <div className="h-4/5 w-full">
-        <img
-          src="https://media.istockphoto.com/vectors/philadelphia-colored-vector-map-vector-id1252287417?k=20&m=1252287417&s=612x612&w=0&h=9PGRK5EUltJ_2UDwfmRns2BaqaNDynNNeHN4Ha1K8uc="
-          alt="Map Image"
-          className="h-full w-full object-cover"
-        />
+      <div className="h-3/4 w-full">
+        <LiveTracking />
       </div>
 
       {/* Ride Information Section */}

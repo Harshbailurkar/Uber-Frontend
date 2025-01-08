@@ -172,18 +172,23 @@ function UserHome() {
 
   return (
     <div className="h-screen w-screen flex flex-col relative overflow-hidden">
-      <div className="flex flex-row items-center justify-end">
-        <img src={UberLogo} alt="" className="w-16 absolute left-5 top-5" />
+      <div className="flex flex-row items-center justify-end z-[1000]">
         {!visible && (
-          <div
-            className="absolute  right-5 top-5 font-bold bg-[#004D40] text-white w-10 h-10 flex items-center justify-center rounded-full z-10"
-            onClick={visitUserProfile}
-          >
-            {user?.fullName?.firstName[0]?.toUpperCase() || "U"}
+          <div>
+            <img src={UberLogo} alt="" className="w-16 absolute left-5 top-5" />
+
+            <div
+              className="absolute  right-5 top-5 font-bold bg-[#004D40] text-white w-10 h-10 flex items-center justify-center rounded-full z-10"
+              onClick={visitUserProfile}
+            >
+              {user?.fullName?.firstName[0]?.toUpperCase() || "U"}
+            </div>
           </div>
         )}
       </div>
-      <div className="h-screen w-screen absolute z-100">
+      <div
+        className={`h-4/6 w-full absolute ${!visible ? "z-[999]" : "z-[-999]"}`}
+      >
         <LiveTracking />
       </div>
       <div className="absolute flex flex-col h-screen justify-end top-0 w-full z-10">

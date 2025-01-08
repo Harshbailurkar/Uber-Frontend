@@ -10,6 +10,7 @@ import gsap from "gsap";
 import ConfirmRidePopup from "../components/ConfirmRidePopup";
 import { useSocket } from "../context/SocketContext";
 import { rideConfirm } from "../API/rideAPI";
+import LiveTracking from "../components/LiveTracking";
 
 function CaptainHome() {
   const captain = useSelector((state) => state.captain);
@@ -103,11 +104,7 @@ function CaptainHome() {
       </div>
       {/* Map Section */}
       <div className="h-3/5 w-full">
-        <img
-          src="https://media.istockphoto.com/vectors/philadelphia-colored-vector-map-vector-id1252287417?k=20&m=1252287417&s=612x612&w=0&h=9PGRK5EUltJ_2UDwfmRns2BaqaNDynNNeHN4Ha1K8uc="
-          alt="Map Image"
-          className="h-full w-full object-cover"
-        />
+        <LiveTracking />
       </div>
 
       {/* Bottom Section */}
