@@ -4,11 +4,26 @@ import { IoLocation } from "react-icons/io5";
 import { MdOutlineMyLocation } from "react-icons/md";
 import { BsCash } from "react-icons/bs";
 import { Link } from "react-router-dom";
+import { finishRide } from "../API/rideAPI";
+import { useNavigate } from "react-router-dom";
 function FinishRide({
+  ride,
   finishridepanelref,
   setfinishRidePanel,
   finishridepanel,
 }) {
+  const navigate = useNavigate();
+  function completeRide() {
+    const token = localStorage.getItem("ctoken");
+    console.log(ride._id, token);
+    const data = {
+      rideId: ride._id,
+    };
+    finishRide(data, token).then((res) => {
+      navigate("/captain-home");
+    });
+  }
+
   return (
     <div
       ref={finishridepanelref}
@@ -33,7 +48,9 @@ function FinishRide({
             src="https://avatars.githubusercontent.com/u/113308692?v=4"
             alt=""
           />
-          <h2 className="text-lg font-medium">Harsh Bailurkar</h2>
+          <h2 className="text-lg font-medium capitalize">
+            {ride?.user.fullName.firstName + " " + ride?.user.fullName.lastName}
+          </h2>
         </div>
         <h5 className="text-xl font-semibold">2.2 Km</h5>
       </div>
@@ -45,9 +62,7 @@ function FinishRide({
 
             <div>
               <h3 className="text-lg font-medium ml-5">151 A</h3>
-              <p className="text-md -mt-1 text-gray-600 ml-5">
-                Vyankatesh Galli Ajara, 416505
-              </p>
+              <p className="text-md -mt-1 text-gray-600 ml-5">{ride?.pickup}</p>
             </div>
           </div>
           <div className="flex flex-row items-center border-b-2 pb-2">
@@ -55,7 +70,7 @@ function FinishRide({
             <div>
               <h3 className="text-lg font-medium ml-5">192 A wing</h3>
               <p className="text-md -mt-1 text-gray-600 ml-5">
-                Viraj PG, Viman nagar, pune. 416505
+                {ride?.destination}
               </p>
             </div>
           </div>
@@ -63,16 +78,17 @@ function FinishRide({
             <BsCash />
             <div>
               <p className="text-lg ml-5 text-gray-600">Cash</p>
-              <h3 className="text-2xl ml-5 font-medium">₹ 109.20</h3>
+              <h3 className="text-2xl ml-5 font-medium">₹ {ride?.fare}</h3>
             </div>
           </div>
         </div>
 
-        <Link to="/captain-home" className="w-full mt-5">
-          <button className="  w-full p-2 text-gray-100  text-lg bg-gray-900 font-semibold rounded-lg">
-            Complete Ride
-          </button>
-        </Link>
+        <button
+          className="  w-full p-2 text-gray-100  text-lg bg-gray-900 font-semibold rounded-lg"
+          onClick={completeRide}
+        >
+          Complete Ride
+        </button>
 
         <p className="text-sm text-gray-600 text-center">
           If you complete with the payment, click on Complete Ride{" "}

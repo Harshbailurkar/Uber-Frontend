@@ -6,7 +6,11 @@ import { IoLocation } from "react-icons/io5";
 import { MdOutlineMyLocation } from "react-icons/md";
 import { BsCash } from "react-icons/bs";
 
-function WaitingForDriver({ waitingfordriverref, waitingfordriver }) {
+function WaitingForDriver({
+  rideDetails,
+  waitingfordriverref,
+  waitingfordriver,
+}) {
   return (
     <div
       ref={waitingfordriverref}
@@ -22,13 +26,64 @@ function WaitingForDriver({ waitingfordriverref, waitingfordriver }) {
         </div>
       </div>
       <div>
-        <div className="w-fill flex items-center justify-between px-3">
-          <img src={car} alt="" className="h-14" />
+        <div className="w-fill flex flex-col items-center justify-between px-3">
+          <div className="flex justify-between w-full">
+            <img src={car} alt="" className="h-14" />
 
-          <div className="text-right">
-            <h2 className="text-lg font-medium ">Harsh Bailurkar</h2>
-            <h4 className="text-xl font-semibold -mt-1 -mb-1">MH 09 BE 2434</h4>
-            <p className="text-sm text-gray-600">Maruti Suzuki Alto</p>
+            <div className="text-right">
+              <h2 className="text-lg font-medium capitalize ">
+                {rideDetails?.data.captain.fullName.firstName +
+                  " " +
+                  rideDetails?.data.captain.fullName.lastName}
+              </h2>
+
+              <h4 className="text-xl font-semibold -mt-1 -mb-1 uppercase ">
+                {rideDetails?.data.captain.vehical.plate}
+              </h4>
+              <p className="text-sm text-gray-600 capitalize">
+                {rideDetails?.data.captain.vehical.capacity +
+                  " seater " +
+                  rideDetails?.data.captain.vehical.vehicleType}
+              </p>
+            </div>
+          </div>
+          <div className="w-full flex flex-col  gap-3">
+            <div className="flex justify-between mt-3 items-center bg-slate-100">
+              <h1 className="text-black text-right  rounded font-semibold text-2xl  p-1 tracking-widest">
+                OTP
+              </h1>
+              <h1 className="text-black text-right  rounded font-semibold text-3xl bg-slate-100 p-1 tracking-widest">
+                {rideDetails?.data.otp}
+              </h1>
+            </div>
+            <div className="flex flex-row items-center border-b-2 pb-2">
+              <IoLocation />
+
+              <div>
+                <h3 className="text-lg font-medium ml-5">151 A</h3>
+                <p className="text-md -mt-1 text-gray-600 ml-5">
+                  {rideDetails?.data.pickup}
+                </p>
+              </div>
+            </div>
+            <div className="flex flex-row items-center border-b-2 pb-2">
+              <MdOutlineMyLocation />
+              <div>
+                <h3 className="text-lg font-medium ml-5">192 A wing</h3>
+                <p className="text-md -mt-1 text-gray-600 ml-5">
+                  {rideDetails?.data.destination}
+                </p>
+              </div>
+            </div>
+            <div className="flex flex-row items-center ">
+              <BsCash />
+              <div>
+                <p className="text-lg ml-5 text-gray-600">Cash</p>
+                <h3 className="text-2xl ml-5 font-medium">
+                  ₹ {rideDetails?.data.fare}
+                </h3>
+              </div>
+            </div>
           </div>
         </div>
       </div>

@@ -1,4 +1,4 @@
-import React, { useState, useRef } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import UberLogo from "../assets/Uber-Logo.png";
 import { useSelector } from "react-redux";
 import { useFormAction, useNavigate } from "react-router-dom";
@@ -12,6 +12,8 @@ import WaitingForDriver from "../components/WaitingForDriver";
 import LookingForDriver from "../components/LookingForDriver";
 import { getSuggestions } from "../API/maps";
 import { createRide } from "../API/rideAPI";
+import { useSocket } from "../context/SocketContext";
+import LiveTracking from "../components/LiveTracking";
 
 function UserHome() {
   const user = useSelector((state) => state.user);
@@ -26,6 +28,7 @@ function UserHome() {
   const [destination, setDestination] = useState("");
   const [vehicleType, setVehicleType] = useState(null);
   const [totalAmount, setTotalAmount] = useState(null);
+  const [rideDetails, setRideDetails] = useState(null);
 
   const [state, actionFunction, isPending] = useFormAction(formAction, {
     pickupLocation: "",
@@ -40,6 +43,8 @@ function UserHome() {
   const waitingForDriverRef = useRef(null);
 
   const token = localStorage.getItem("token");
+
+  const { sendMessage, receiveMessage } = useSocket();
 
   useGSAP(() => {
     if (visible) {
@@ -82,6 +87,37 @@ function UserHome() {
       transform: waitingForDriver ? "translateY(0)" : "translateY(100%)",
     });
   }, [waitingForDriver]);
+
+  useEffect(() => {
+    const checkSocketConnection = setInterval(() => {
+      if (sendMessage && receiveMessage) {
+        sendMessage("join", {
+          userType: "user",
+          userId: localStorage.getItem("userId"),
+        });
+        clearInterval(checkSocketConnection);
+      }
+    }, 1000);
+
+    return () => clearInterval(checkSocketConnection);
+  }, [sendMessage, receiveMessage]);
+
+  useEffect(() => {
+    receiveMessage("ride-confirmed", (ride) => {
+      setRideDetails(ride);
+      setVehiclePanel(false);
+      setSelectedVehicleDetailsPanel(false);
+      setVehicleFound(false);
+      setWaitingForDriver(true);
+    });
+  }, [receiveMessage]);
+
+  useEffect(() => {
+    receiveMessage("ride-started", (ride) => {
+      setWaitingForDriver(false);
+      navigate("/riding", { state: { rideDetails: ride } });
+    });
+  }, [receiveMessage, navigate]);
 
   async function formAction(prevState, FormData) {
     const data = {
@@ -126,7 +162,7 @@ function UserHome() {
       setPickupLocation(suggestion.description);
     } else if (inputType === "destination") {
       setDestination(suggestion.description);
-      setVehiclePanel(true); // Open vehicle panel only when destination is added
+      setVehiclePanel(true);
     }
   }
 
@@ -147,16 +183,11 @@ function UserHome() {
           </div>
         )}
       </div>
-      <div className="h-screen w-screen">
-        {/* image for temporary use */}
-        <img
-          src="https://media.istockphoto.com/vectors/philadelphia-colored-vector-map-vector-id1252287417?k=20&m=1252287417&s=612x612&w=0&h=9PGRK5EUltJ_2UDwfmRns2BaqaNDynNNeHN4Ha1K8uc="
-          alt=""
-          className="h-full w-full object-cover"
-        />
+      <div className="h-screen w-screen absolute z-100">
+        <LiveTracking />
       </div>
-      <div className=" absolute flex flex-col h-screen justify-end top-0 w-full ">
-        <div className="h-[30%]  bg-white p-5 relative rounded-t-2xl">
+      <div className="absolute flex flex-col h-screen justify-end top-0 w-full z-10">
+        <div className="h-[30%] bg-white p-5 relative rounded-t-2xl">
           <div className="flex justify-between">
             <h4 className="text-2xl font-semibold">Find Trip</h4>
             <h5 className="p-1">
@@ -200,7 +231,7 @@ function UserHome() {
             </button>
           )}
         </div>
-        <div ref={PannelRef} className={` bg-white `}>
+        <div ref={PannelRef} className="bg-white">
           <LocationSearchPanel
             vehiclePanel={vehiclePanel}
             setVehiclePanel={setVehiclePanel}
@@ -245,6 +276,7 @@ function UserHome() {
         <WaitingForDriver
           waitingfordriverref={waitingForDriverRef}
           waitingfordriver={waitingForDriver}
+          rideDetails={rideDetails}
         />
       </div>
     </div>

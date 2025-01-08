@@ -6,13 +6,14 @@ import Userlogin from "./pages/Userlogin";
 import CaptainRegister from "./pages/CaptainRegister";
 import Captainlogin from "./pages/Captainlogin";
 import UserHome from "./pages/UserHome";
-import CaptainHome from "./pages/CaptainHome";
+import CaptainHome from "./pages/captainHome";
 import UserProtectedWrapper from "./pages/UserProtectedWrapper";
 import UserProfile from "./pages/UserProfile";
 import Riding from "./pages/Riding";
 import CaptainProtectedWrapper from "./pages/CaptainProtectedWrapper";
 import CaptainProfile from "./pages/CaptainProfile";
 import CaptainRiding from "./pages/CaptainRiding";
+import LiveTracking from "./components/LiveTracking";
 function App() {
   return (
     <div>
@@ -26,6 +27,7 @@ function App() {
           <Route path="/user-home" element={<UserHome />} />
           <Route path="/user-profile" element={<UserProfile />} />
           <Route path="/riding" element={<Riding />} />
+          <Route path="/live-tracking" element={<LiveTracking />} />
         </Route>
         <Route element={<CaptainProtectedWrapper />}>
           <Route path="/captain-home" element={<CaptainHome />} />

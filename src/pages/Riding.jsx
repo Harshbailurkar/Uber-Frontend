@@ -1,12 +1,25 @@
-import React from "react";
+import React, { useEffect } from "react";
 import car from "../assets/car.png";
 import { IoLocation } from "react-icons/io5";
 import { MdOutlineMyLocation } from "react-icons/md";
 import { BsCash } from "react-icons/bs";
 import { FaHome } from "react-icons/fa";
-import { Link } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
+import { useSocket } from "../context/SocketContext";
 
 const Riding = () => {
+  const location = useLocation();
+  const { rideDetails } = location.state || {};
+  const { sendMessage, receiveMessage } = useSocket();
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    receiveMessage("ride-ended", (data) => {
+      console.log("Ride Ended", data);
+      navigate("/user-home");
+    });
+  }, [receiveMessage]);
+
   return (
     <div className="h-screen flex flex-col">
       <Link to="/user-home">
@@ -29,9 +42,18 @@ const Riding = () => {
         <div className="flex items-center justify-between">
           <img src={car} alt="Car Image" className="h-14" />
           <div className="text-right">
-            <h2 className="text-lg font-medium">Harsh Bailurkar</h2>
-            <h4 className="text-xl font-semibold -mt-1 -mb-1">MH 09 BE 2434</h4>
-            <p className="text-sm text-gray-600">Maruti Suzuki Alto</p>
+            <h2 className="text-lg font-medium capitalize">
+              {rideDetails?.data.captain.fullName.firstName +
+                " " +
+                rideDetails?.data.captain.fullName.lastName || "Driver Name"}
+            </h2>
+            <h4 className="text-xl font-semibold -mt-1 -mb-1">
+              {rideDetails?.data.captain.vehical.plate || "Vehicle Number"}
+            </h4>
+            <p className="text-sm text-gray-600">
+              {rideDetails?.data.captain.vehical.capacity + " seater" ||
+                "Vehicle Model"}
+            </p>
           </div>
         </div>
 
@@ -40,18 +62,18 @@ const Riding = () => {
           <div className="flex items-center border-b-2 pb-2">
             <IoLocation className="mr-2" />
             <div>
-              <h3 className="text-lg font-medium">151 A</h3>
+              <h3 className="text-lg font-medium">{"Pickup Location"}</h3>
               <p className="text-md text-gray-600">
-                Vyankatesh Galli Ajara, 416505
+                {rideDetails?.data.pickup || "Pickup Address"}
               </p>
             </div>
           </div>
           <div className="flex items-center border-b-2 pb-2">
             <MdOutlineMyLocation className="mr-2" />
             <div>
-              <h3 className="text-lg font-medium">192 A wing</h3>
+              <h3 className="text-lg font-medium">{"Destination"}</h3>
               <p className="text-md text-gray-600">
-                Viraj PG, Viman nagar, Pune, 416505
+                {rideDetails?.data.destination || "Destination Address"}
               </p>
             </div>
           </div>
@@ -59,7 +81,9 @@ const Riding = () => {
             <BsCash className="mr-2" />
             <div>
               <p className="text-lg text-gray-600">Cash</p>
-              <h3 className="text-2xl font-medium">₹ 109.20</h3>
+              <h3 className="text-2xl font-medium">
+                ₹ {rideDetails?.data.fare || "Fare Amount"}
+              </h3>
             </div>
           </div>
         </div>

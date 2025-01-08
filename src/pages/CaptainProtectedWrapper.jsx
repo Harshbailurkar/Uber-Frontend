@@ -15,6 +15,7 @@ function CaptainProtectedWrapper() {
     const fetchCaptain = async () => {
       await getCaptain(token)
         .then((data) => {
+          localStorage.setItem("captainId", data.data._id);
           dispatch(
             setCaptain({
               email: data.data.email,

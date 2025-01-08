@@ -15,8 +15,10 @@ function UserProtectedWrapper() {
     const fetchUser = async () => {
       await getUser(token)
         .then((data) => {
+          localStorage.setItem("userId", data.data._id);
           dispatch(
             setUser({
+              id: data.data._id,
               email: data.data.email,
               fullName: {
                 firstName: data.data.fullName.firstName,

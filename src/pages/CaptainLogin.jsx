@@ -22,6 +22,7 @@ function CaptainLogin() {
     await loginCaptain(data)
       .then((res) => {
         localStorage.setItem("ctoken", res.data.accessToken);
+        localStorage.setItem("captainId", res.data.captain._id);
         Navigate("/captain-home");
       })
       .catch((error) => {

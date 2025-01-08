@@ -24,6 +24,7 @@ function Userlogin() {
       await loginUser(data)
         .then((res) => {
           localStorage.setItem("token", res.data.accessToken);
+          localStorage.setItem("userId", res.data.user._id);
           navigate("/user-home");
         })
         .catch((error) => {

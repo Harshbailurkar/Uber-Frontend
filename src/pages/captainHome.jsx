@@ -1,4 +1,4 @@
-import React, { useState, useRef } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import { useSelector } from "react-redux";
 import { Link, useNavigate } from "react-router-dom";
 import UberLogo from "../assets/Uber-Logo.png";
@@ -8,14 +8,18 @@ import RidePopup from "../components/RidePopup";
 import { useGSAP } from "@gsap/react";
 import gsap from "gsap";
 import ConfirmRidePopup from "../components/ConfirmRidePopup";
+import { useSocket } from "../context/SocketContext";
+import { rideConfirm } from "../API/rideAPI";
 
 function CaptainHome() {
   const captain = useSelector((state) => state.captain);
   const navigate = useNavigate();
   const ridePopupPanelRef = useRef(null);
   const confirmRidePopupRef = useRef(null);
-  const [ridePopupPanel, setRidePopupPanel] = useState(true);
+  const [ridePopupPanel, setRidePopupPanel] = useState(false);
   const [confirmRidePopup, setConfirmRidePopup] = useState(false);
+  const [rideDetails, setRideDetails] = useState(null);
+  const { sendMessage, receiveMessage } = useSocket();
 
   useGSAP(() => {
     gsap.to(ridePopupPanelRef.current, {
@@ -27,6 +31,60 @@ function CaptainHome() {
       transform: confirmRidePopup ? "translateY(0)" : "translateY(100%)",
     });
   }, [confirmRidePopup]);
+
+  useEffect(() => {
+    const checkSocketConnection = setInterval(() => {
+      if (sendMessage && receiveMessage) {
+        sendMessage("join", {
+          userType: "captain",
+          userId: localStorage.getItem("captainId"),
+        });
+        clearInterval(checkSocketConnection);
+      }
+    }, 1000);
+
+    return () => clearInterval(checkSocketConnection);
+  }, [sendMessage, receiveMessage]);
+
+  useEffect(() => {
+    const updateLocationInterval = setInterval(() => {
+      if (sendMessage && receiveMessage) {
+        if (navigator.geolocation) {
+          navigator.geolocation.getCurrentPosition((position) => {
+            const { latitude, longitude } = position.coords;
+            const location = {
+              ltd: latitude,
+              lng: longitude,
+            };
+            sendMessage("update-location-captain", {
+              userId: localStorage.getItem("captainId"),
+              location,
+            });
+          });
+        }
+      }
+    }, 10000);
+
+    return () => clearInterval(updateLocationInterval);
+  }, [sendMessage, receiveMessage]);
+
+  async function confirmRide() {
+    const data = {
+      rideId: rideDetails.data._id,
+    };
+
+    const token = localStorage.getItem("ctoken");
+
+    const response = await rideConfirm(data, token);
+    console.log(response);
+  }
+
+  useEffect(() => {
+    receiveMessage("new-ride", (data) => {
+      setRideDetails(data);
+      setRidePopupPanel(true);
+    });
+  }, [receiveMessage]);
 
   return (
     <div className="h-screen flex flex-col">
@@ -61,11 +119,14 @@ function CaptainHome() {
       {/* Floating Components */}
 
       <RidePopup
+        ride={rideDetails}
         ridepopuppanelref={ridePopupPanelRef}
         setridepopuppanel={setRidePopupPanel}
         setconfirmridepopup={setConfirmRidePopup}
+        confirmRide={confirmRide}
       />
       <ConfirmRidePopup
+        rideDetails={rideDetails}
         confirmridepopup={confirmRidePopupRef}
         setconfirmridepopup={setConfirmRidePopup}
         setridepopuppanel={setRidePopupPanel}

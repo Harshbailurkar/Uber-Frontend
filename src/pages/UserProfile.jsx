@@ -12,6 +12,7 @@ function UserProfile() {
     await logoutUser(token)
       .then(() => {
         localStorage.removeItem("token");
+        localStorage.removeItem("userId");
         navigate("/login");
       })
       .catch((err) => {

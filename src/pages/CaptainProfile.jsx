@@ -96,7 +96,11 @@ export default function CaptainProfile() {
           </button>
           <button
             className="bg-black text-white px-4 py-2 rounded-lg shadow hover:bg-red-400 transition"
-            onClick={() => navigate("/login")}
+            onClick={() => {
+              localStorage.removeItem("ctoken");
+              localStorage.removeItem("captainId");
+              navigate("/login");
+            }}
           >
             Logout
           </button>

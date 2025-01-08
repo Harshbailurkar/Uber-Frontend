@@ -5,9 +5,11 @@ import { MdOutlineMyLocation } from "react-icons/md";
 import { BsCash } from "react-icons/bs";
 
 function RidePopup({
+  ride,
   ridepopuppanelref,
   setridepopuppanel,
   setconfirmridepopup,
+  confirmRide,
 }) {
   return (
     <div
@@ -28,7 +30,11 @@ function RidePopup({
             src="https://avatars.githubusercontent.com/u/113308692?v=4"
             alt=""
           />
-          <h2 className="text-lg font-medium">Harsh Bailurkar</h2>
+          <h2 className="text-lg font-medium capitalize">
+            {ride?.data?.user?.fullName?.firstName +
+              " " +
+              ride?.data?.user?.fullName?.lastName}
+          </h2>
         </div>
         <h5 className="text-xl font-semibold">2.2 Km</h5>
       </div>
@@ -41,7 +47,7 @@ function RidePopup({
             <div>
               <h3 className="text-lg font-medium ml-5">151 A</h3>
               <p className="text-md -mt-1 text-gray-600 ml-5">
-                Vyankatesh Galli Ajara, 416505
+                {ride?.data?.pickup}
               </p>
             </div>
           </div>
@@ -50,7 +56,7 @@ function RidePopup({
             <div>
               <h3 className="text-lg font-medium ml-5">192 A wing</h3>
               <p className="text-md -mt-1 text-gray-600 ml-5">
-                Viraj PG, Viman nagar, pune. 416505
+                {ride?.data?.destination}
               </p>
             </div>
           </div>
@@ -58,7 +64,9 @@ function RidePopup({
             <BsCash />
             <div>
               <p className="text-lg ml-5 text-gray-600">Cash</p>
-              <h3 className="text-2xl ml-5 font-medium">₹ 109.20</h3>
+              <h3 className="text-2xl ml-5 font-medium">
+                ₹ {ride?.data?.fare}
+              </h3>
             </div>
           </div>
         </div>
@@ -66,6 +74,7 @@ function RidePopup({
           className=" mt-5 w-full p-2 text-white text-lg bg-gray-900 font-semibold rounded-lg"
           onClick={() => {
             setconfirmridepopup(true);
+            confirmRide();
           }}
         >
           Accept

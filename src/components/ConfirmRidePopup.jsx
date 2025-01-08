@@ -5,10 +5,12 @@ import { MdOutlineMyLocation } from "react-icons/md";
 import { BsCash } from "react-icons/bs";
 import { Link } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
+import { startRide } from "../API/rideAPI";
 function ConfirmRidePopup({
   confirmridepopup,
   setconfirmridepopup,
   setridepopuppanel,
+  rideDetails,
 }) {
   const [otp, setOtp] = useState(["", "", "", ""]);
   const inputs = useRef([]);
@@ -54,10 +56,15 @@ function ConfirmRidePopup({
     }
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log("OTP submitted:", otp.join(""));
-    navigate("/captain-riding");
+    const token = localStorage.getItem("ctoken");
+    const data = {
+      rideId: rideDetails?.data._id,
+      otp: otp.join(""),
+    };
+    await startRide(data, token);
+    navigate("/captain-riding", { state: { rideDetails: rideDetails.data } });
   };
 
   return (
@@ -84,7 +91,11 @@ function ConfirmRidePopup({
             src="https://avatars.githubusercontent.com/u/113308692?v=4"
             alt=""
           />
-          <h2 className="text-lg font-medium">Harsh Bailurkar</h2>
+          <h2 className="text-lg font-medium capitalize">
+            {rideDetails?.data.user.fullName.firstName +
+              " " +
+              rideDetails?.data.user.fullName.lastName}
+          </h2>
         </div>
         <h5 className="text-xl font-semibold">2.2 Km</h5>
       </div>
@@ -97,7 +108,7 @@ function ConfirmRidePopup({
             <div>
               <h3 className="text-lg font-medium ml-5">151 A</h3>
               <p className="text-md -mt-1 text-gray-600 ml-5">
-                Vyankatesh Galli Ajara, 416505
+                {rideDetails?.data.pickup}
               </p>
             </div>
           </div>
@@ -106,7 +117,7 @@ function ConfirmRidePopup({
             <div>
               <h3 className="text-lg font-medium ml-5">192 A wing</h3>
               <p className="text-md -mt-1 text-gray-600 ml-5">
-                Viraj PG, Viman nagar, pune. 416505
+                {rideDetails?.data.destination}
               </p>
             </div>
           </div>
@@ -114,7 +125,9 @@ function ConfirmRidePopup({
             <BsCash />
             <div>
               <p className="text-lg ml-5 text-gray-600">Cash</p>
-              <h3 className="text-2xl ml-5 font-medium">₹ 109.20</h3>
+              <h3 className="text-2xl ml-5 font-medium">
+                ₹ {rideDetails?.data.fare}
+              </h3>
             </div>
           </div>
         </div>

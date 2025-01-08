@@ -1,5 +1,5 @@
 import React, { useState, useRef } from "react";
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 import UberLogo from "../assets/Uber-Logo.png";
 import { FaChevronUp } from "react-icons/fa6";
 import { useEffect } from "react";
@@ -7,6 +7,9 @@ import gsap from "gsap";
 import FinishRide from "../components/FinishRide";
 
 function CaptainRiding() {
+  const location = useLocation();
+  const rideDetails = location.state?.rideDetails;
+
   const [finishRidePanel, setFinishRidePanel] = useState(false); // Default state
   const finishRidePanelRef = useRef(null);
 
@@ -60,6 +63,7 @@ function CaptainRiding() {
           </button>
         </div>
         <FinishRide
+          ride={rideDetails}
           finishridepanelref={finishRidePanelRef}
           setfinishRidePanel={setFinishRidePanel}
           finishridepanel={finishRidePanel}
