@@ -83,6 +83,29 @@ or
 yarn lint
 ```
 
+### Running Tests
+
+To run the tests, use:
+
+```sh
+npm test
+```
+
+or
+
+```sh
+yarn test
+```
+
+### Environment Variables
+
+Make sure to set up the following environment variables in a `.env` file at the root of the project:
+
+```
+REACT_APP_API_URL=<your_api_url>
+REACT_APP_GOOGLE_MAPS_API_KEY=<your_google_maps_api_key>
+```
+
 ## Project Structure
 
 The project structure is as follows:
@@ -113,6 +136,7 @@ In the project directory, you can run:
 - `npm run dev` or `yarn dev`: Runs the app in development mode.
 - `npm run build` or `yarn build`: Builds the app for production.
 - `npm run lint` or `yarn lint`: Lints the code.
+- `npm test` or `yarn test`: Runs the test suite.
 
 ## Learn More
 
