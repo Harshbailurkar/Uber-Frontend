@@ -15,7 +15,7 @@ function FinishRide({
   const navigate = useNavigate();
   function completeRide() {
     const token = localStorage.getItem("ctoken");
-    console.log(ride._id, token);
+
     const data = {
       rideId: ride._id,
     };

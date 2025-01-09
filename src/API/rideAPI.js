@@ -70,7 +70,7 @@ export const finishRide = async (data, token) => {
         Authorization: `Bearer ${token}`,
       },
     });
-    console.log("finishRide", response);
+
     return response.data;
   } catch (error) {
     throw error.response

@@ -3,12 +3,26 @@ import { GoogleMap, Marker, useJsApiLoader } from "@react-google-maps/api";
 import Skeleton from "react-loading-skeleton";
 import "react-loading-skeleton/dist/skeleton.css";
 
-function LiveTracking() {
+function LiveTrackingForUser({ SetCurrentAddress }) {
   const [currentPosition, setCurrentPosition] = useState({ lat: 0, lng: 0 });
 
   const { isLoaded, loadError } = useJsApiLoader({
     googleMapsApiKey: import.meta.env.VITE_GOOGLE_MAPS_API_KEY,
   });
+
+  const fetchAddress = async (lat, lng) => {
+    const response = await fetch(
+      `https://maps.googleapis.com/maps/api/geocode/json?latlng=${lat},${lng}&key=${
+        import.meta.env.VITE_GOOGLE_MAPS_API_KEY
+      }`
+    );
+    const data = await response.json();
+    if (data.results && data.results.length > 0) {
+      SetCurrentAddress(data.results[0].formatted_address);
+    } else {
+      console.log("No address found");
+    }
+  };
 
   useEffect(() => {
     const updatePosition = () => {
@@ -18,6 +32,7 @@ function LiveTracking() {
           lat: latitude,
           lng: longitude,
         });
+        fetchAddress(latitude, longitude);
       });
     };
 
@@ -54,4 +69,4 @@ function LiveTracking() {
   );
 }
 
-export default LiveTracking;
+export default LiveTrackingForUser;

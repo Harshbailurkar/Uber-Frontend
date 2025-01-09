@@ -13,7 +13,7 @@ import LookingForDriver from "../components/LookingForDriver";
 import { getSuggestions } from "../API/maps";
 import { createRide } from "../API/rideAPI";
 import { useSocket } from "../context/SocketContext";
-import LiveTracking from "../components/LiveTracking";
+import LiveTrackingForUser from "../components/LiveTrackingForUser";
 
 function UserHome() {
   const user = useSelector((state) => state.user);
@@ -29,6 +29,7 @@ function UserHome() {
   const [vehicleType, setVehicleType] = useState(null);
   const [totalAmount, setTotalAmount] = useState(null);
   const [rideDetails, setRideDetails] = useState(null);
+  const [currentAddress, setCurrentAddress] = useState("");
 
   const [state, actionFunction, isPending] = useFormAction(formAction, {
     pickupLocation: "",
@@ -119,12 +120,16 @@ function UserHome() {
     });
   }, [receiveMessage, navigate]);
 
+  useEffect(() => {
+    setPickupLocation(currentAddress);
+  }, [currentAddress]);
+
   async function formAction(prevState, FormData) {
     const data = {
       pickupLocation: FormData.get("pickupLocation"),
       destination: FormData.get("destination"),
     };
-    console.log(data);
+
     return data;
   }
 
@@ -151,7 +156,6 @@ function UserHome() {
     };
     try {
       const response = await createRide(data, token);
-      console.log(response);
     } catch (error) {
       console.error("Error creating ride:", error.message);
     }
@@ -189,7 +193,7 @@ function UserHome() {
       <div
         className={`h-4/6 w-full absolute ${!visible ? "z-[999]" : "z-[-999]"}`}
       >
-        <LiveTracking />
+        <LiveTrackingForUser SetCurrentAddress={setCurrentAddress} />
       </div>
       <div className="absolute flex flex-col h-screen justify-end top-0 w-full z-10">
         <div className="h-[30%] bg-white p-5 relative rounded-t-2xl">

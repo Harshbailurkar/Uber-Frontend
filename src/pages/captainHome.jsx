@@ -77,7 +77,6 @@ function CaptainHome() {
     const token = localStorage.getItem("ctoken");
 
     const response = await rideConfirm(data, token);
-    console.log(response);
   }
 
   useEffect(() => {
