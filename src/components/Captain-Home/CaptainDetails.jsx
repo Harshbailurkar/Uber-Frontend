@@ -1,6 +1,6 @@
 import React from "react";
 
-function CaptainDetails() {
+function CaptainDetails({ captainEarning }) {
   return (
     <div className="flex items-center justify-between">
       <div className="flex items-center justify-start gap-4 mt-2">
@@ -12,7 +12,7 @@ function CaptainDetails() {
         <h4 className="text-lg font-medium">Harsh Bailurkar</h4>
       </div>
       <div>
-        <h4 className="text-xl font-semibold">₹759.80</h4>
+        <h4 className="text-xl font-semibold">₹{captainEarning}</h4>
         <p className="text-sm text-gray-600">Earned</p>
       </div>
     </div>

@@ -13,7 +13,7 @@ import Riding from "./pages/Riding";
 import CaptainProtectedWrapper from "./pages/CaptainProtectedWrapper";
 import CaptainProfile from "./pages/CaptainProfile";
 import CaptainRiding from "./pages/CaptainRiding";
-
+import MapAndRoute from "./components/MapAndRoute";
 function App() {
   return (
     <div>
@@ -27,6 +27,7 @@ function App() {
           <Route path="/user-home" element={<UserHome />} />
           <Route path="/user-profile" element={<UserProfile />} />
           <Route path="/riding" element={<Riding />} />
+          <Route path="/map" element={<MapAndRoute />} />
         </Route>
         <Route element={<CaptainProtectedWrapper />}>
           <Route path="/captain-home" element={<CaptainHome />} />

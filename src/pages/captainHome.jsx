@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect } from "react";
+import React, { useState, useRef, useEffect, use } from "react";
 import { useSelector } from "react-redux";
 import { Link, useNavigate } from "react-router-dom";
 import UberLogo from "../assets/Uber-Logo.png";
@@ -11,6 +11,7 @@ import ConfirmRidePopup from "../components/ConfirmRidePopup";
 import { useSocket } from "../context/SocketContext";
 import { rideConfirm } from "../API/rideAPI";
 import LiveTracking from "../components/LiveTracking";
+import { getCaptainEarnings } from "../API/captainAPI";
 
 function CaptainHome() {
   const captain = useSelector((state) => state.captain);
@@ -19,6 +20,9 @@ function CaptainHome() {
   const confirmRidePopupRef = useRef(null);
   const [ridePopupPanel, setRidePopupPanel] = useState(false);
   const [confirmRidePopup, setConfirmRidePopup] = useState(false);
+  const [totalEarnings, setTotalEarnings] = useState();
+  const [totalMonthlyRides, setTotalMonthlyRides] = useState();
+  const [totalDistance, setTotalDistance] = useState();
   const [rideDetails, setRideDetails] = useState(null);
   const { sendMessage, receiveMessage } = useSocket();
 
@@ -69,6 +73,21 @@ function CaptainHome() {
     return () => clearInterval(updateLocationInterval);
   }, [sendMessage, receiveMessage]);
 
+  useEffect(() => {
+    const fetchEarnings = async () => {
+      const token = localStorage.getItem("ctoken");
+      if (!token) {
+        navigate("/captain-login");
+      }
+      const response = await getCaptainEarnings(token);
+      setTotalEarnings(response.data.totalEarnings);
+      setTotalMonthlyRides(response.data.totalMonthlyRides);
+      setTotalDistance(response.data.totalDistance);
+    };
+
+    fetchEarnings();
+  }, [navigate]);
+
   async function confirmRide() {
     const data = {
       rideId: rideDetails.data._id,
@@ -76,7 +95,7 @@ function CaptainHome() {
 
     const token = localStorage.getItem("ctoken");
 
-    const response = await rideConfirm(data, token);
+    await rideConfirm(data, token);
   }
 
   useEffect(() => {
@@ -108,8 +127,11 @@ function CaptainHome() {
 
       {/* Bottom Section */}
       <div className="h-2/5 p-4">
-        <CaptainDetails />
-        <CaptainRideDetails />
+        <CaptainDetails captainEarning={totalEarnings} />
+        <CaptainRideDetails
+          captainMonthlyRides={totalMonthlyRides}
+          captainTotalDistance={totalDistance}
+        />
       </div>
 
       {/* Floating Components */}

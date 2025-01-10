@@ -23,7 +23,7 @@ export const createRide = async (data, token) => {
         Authorization: `Bearer ${token}`,
       },
     });
-    console.log(response);
+
     return response.data.data;
   } catch (error) {
     throw error.response

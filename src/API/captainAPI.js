@@ -65,3 +65,25 @@ export const getCaptain = async (token) => {
       : new Error("Failed to get user");
   }
 };
+
+export const getCaptainEarnings = async (token) => {
+  try {
+    const response = await axiosInstance.post(
+      "/captain/earnings",
+      {},
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      }
+    );
+    return response.data;
+  } catch (error) {
+    if (error.response.status === 401) {
+      throw new Error("Unauthorized");
+    }
+    throw error.response
+      ? error.response.data
+      : new Error("Failed to get earnings");
+  }
+};
